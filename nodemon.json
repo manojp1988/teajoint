@@ -1,0 +1,8 @@
+{
+  "env": {
+    "PORT": 3000,
+    "MONGO_USER": "manojp1988",
+    "MONGO_PASSWORD": "L9CAYCvKmDa64aF",
+    "MONGO_DB": "graphql"
+  }
+}
