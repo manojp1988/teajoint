@@ -1,4 +1,4 @@
-const { gql } = require('apollo-server');
+const { gql } = require('apollo-server-express');
 const bcrypt = require('bcrypt');
 
 const User = require('../model/user');
@@ -13,7 +13,7 @@ const typeDefs = gql`
   }
 
   type User {
-    _id: String!
+    _id: ID!
     name: String!
     email: String!
     age: Int!
@@ -29,7 +29,6 @@ const typeDefs = gql`
   }
 
   type Address {
-    _id: String!
     street: String!
     city: String!
   }
@@ -43,9 +42,7 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     users: async () => {
-      const result = await User.find();
-
-      return result;
+      return await User.find();
     }
   },
   Mutation: {

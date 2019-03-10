@@ -1,7 +1,9 @@
-const { gql } = require('apollo-server');
+const { gql } = require('apollo-server-express');
 const _ = require('lodash');
-const { typeDefs: User, resolvers: userResolvers } = require('./user.js');
 const { makeExecutableSchema } = require('graphql-tools');
+
+const { typeDefs: User, resolvers: userResolvers } = require('./user.js');
+const { typeDefs: Product, resolvers: productResolvers } = require('./product.js');
 
 const typeDefs = gql`
   type Query {
@@ -16,6 +18,6 @@ const typeDefs = gql`
 const resolvers = {};
 
 module.exports = makeExecutableSchema({
-  typeDefs: [typeDefs, User],
-  resolvers: _.merge(resolvers, userResolvers)
+  typeDefs: [typeDefs, User, Product],
+  resolvers: _.merge(resolvers, userResolvers, productResolvers)
 });
