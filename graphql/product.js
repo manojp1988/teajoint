@@ -15,11 +15,13 @@ module.exports.typeDefs = gql`
     _id: ID!
     name: String!
     price: Float!
+    quantity: Int!
   }
 
   input ProductInput {
     name: String!
     price: Float!
+    quantity: Int!
   }
 `;
 
@@ -34,7 +36,8 @@ module.exports.resolvers = {
     createProduct: async (_, { productInput }) => {
       const product = new Product({
         name: productInput.name,
-        price: productInput.price
+        price: productInput.price,
+        quantity: productInput.quantity
       });
 
       const result = await product.save();

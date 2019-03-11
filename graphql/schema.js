@@ -4,6 +4,7 @@ const { makeExecutableSchema } = require('graphql-tools');
 
 const { typeDefs: User, resolvers: userResolvers } = require('./user.js');
 const { typeDefs: Product, resolvers: productResolvers } = require('./product.js');
+const { typeDefs: Order, resolvers: orderResolvers } = require('./order.js');
 
 const typeDefs = gql`
   type Query {
@@ -18,6 +19,6 @@ const typeDefs = gql`
 const resolvers = {};
 
 module.exports = makeExecutableSchema({
-  typeDefs: [typeDefs, User, Product],
-  resolvers: _.merge(resolvers, userResolvers, productResolvers)
+  typeDefs: [typeDefs, User, Product, Order],
+  resolvers: _.merge(resolvers, userResolvers, productResolvers, orderResolvers)
 });
