@@ -1,9 +1,12 @@
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
-const schema = require('./graphql/schema');
 const mongoose = require('mongoose');
 
+const schema = require('./graphql/schema');
+const auth = require('./middlewares/auth');
+
 const server = new ApolloServer({
+  context: auth,
   schema
 });
 
