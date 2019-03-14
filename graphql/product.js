@@ -27,13 +27,21 @@ module.exports.typeDefs = gql`
 
 module.exports.resolvers = {
   Query: {
-    products: async () => {
+    products: async (_, __, { isAuth }) => {
+      if (!isAuth) {
+        throw new Error('Access Denied');
+      }
+
       return await Product.find();
     }
   },
 
   Mutation: {
-    createProduct: async (_, { productInput }) => {
+    createProduct: async (_, { productInput }, { isAuth }) => {
+      if (!isAuth) {
+        throw new Error('Access Denied');
+      }
+
       const product = new Product({
         name: productInput.name,
         price: productInput.price,

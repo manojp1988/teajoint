@@ -1,11 +1,13 @@
 const { gql } = require('apollo-server-express');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const User = require('../model/user');
 
 const typeDefs = gql`
   extend type Query {
     users: [User!]
+    login(email: String!, password: String!): String!
   }
 
   extend type Mutation {
@@ -41,12 +43,37 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    users: async () => {
+    users: async (_, __, { isAuth, user }) => {
+      if (!isAuth) {
+        throw new Error('Access Denied');
+      }
       return await User.find();
+    },
+
+    login: async (_, { email, password }) => {
+      const user = await User.findOne({ email: email });
+      if (!user) {
+        throw new Error('Invalid User');
+      }
+
+      const isAMatch = await bcrypt.compare(password, user.password);
+      if (!isAMatch) {
+        throw new Error('Invalid username/password combination!');
+      }
+
+      return jwt.sign(
+        { name: user.name, age: user.age, email: user.email },
+        process.env.TOKEN_KEY,
+        { expiresIn: '1h' }
+      );
     }
   },
   Mutation: {
-    createUser: async (_, args, { dataSources }) => {
+    createUser: async (_, args, { isAuth }) => {
+      if (!isAuth) {
+        throw new Error('Access Denied');
+      }
+
       const user = new User({
         name: args.userInput.name,
         password: await bcrypt.hash(args.userInput.password, 12),

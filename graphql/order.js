@@ -56,7 +56,11 @@ product = async productId => {
 
 module.exports.resolvers = {
   Query: {
-    orders: async () => {
+    orders: async (_, __, { isAuth }) => {
+      if (!isAuth) {
+        throw new Error('Access Denied');
+      }
+
       try {
         const orders = await Order.find();
         return orders.map(transformOrder);
@@ -66,7 +70,11 @@ module.exports.resolvers = {
     }
   },
   Mutation: {
-    createOrders: async (_, { orderInput }) => {
+    createOrders: async (_, { orderInput }, { isAuth }) => {
+      if (!isAuth) {
+        throw new Error('Access Denied');
+      }
+
       try {
         const userResult = await User.findById(orderInput.userId);
         if (!userResult) {
